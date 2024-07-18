@@ -1,0 +1,49 @@
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="navbar-left">
+    <label class="btn-choose">
+      <input type="file" (change)="onFileSelected($event)" multiple #fileInput />
+      <span class="upload-tooltip">Choose Images</span>
+    </label>
+    <button class="uploadbtn" (click)="upload()">Upload</button>
+  </div>
+  <div class="navbar-center">
+    <h4>The Gallery</h4>
+  </div>
+  <div class="navbar-right">
+    <img src="path_to_your_image.jpg" alt="Clickable Image" class="clickable-image" />
+  </div>
+</nav>
+
+<!-- Main Content -->
+<div *ngIf="validationError" class="alert alert-danger" role="alert">
+    {{ validationError }}
+</div>
+<div *ngIf="previewThumbnails.length > 0">
+  <div *ngFor="let preview of previewThumbnails; let i = index">
+    <img [src]="preview" class="preview" />
+    <button (click)="removeSelectedFile(i)" class="btn-remove">Remove</button>
+  </div>
+</div>
+
+<div *ngIf="message" class="alert alert-secondary" role="alert">
+  {{ message }}
+</div>
+
+<div class="image-grid" *ngIf="imageInfos.length > 0">
+  <div class="image-item" *ngFor="let image of imageInfos; trackBy: trackByFn">
+    <a (click)="showFullScreen(image)">
+      <img [src]="image.img" [alt]="image.imgName" />
+    </a>
+  </div>
+</div>
+
+<div *ngIf="fullScreenImage" class="full-screen-overlay" (click)="closeFullScreen()">
+  <div class="full-screen-container">
+    <img [src]="fullScreenImage.img" [alt]="fullScreenImage.imgName" />
+  </div>
+</div>
+
+<div *ngIf="imageInfos.length === 0" class="no-image-msg">
+  No images found.
+</div>

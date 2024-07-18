@@ -1,0 +1,19 @@
+/* Global Styles */
+body { 
+  height: 100vh;
+  width: 100vw;
+  background: linear-gradient(to right, #000000, #8e44ad, #3498db);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  background-color: white;
+  padding: 0 20px;
+  border-bottom: 1px solid #ddd;
+}

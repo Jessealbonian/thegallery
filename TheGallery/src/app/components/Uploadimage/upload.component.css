@@ -28,7 +28,7 @@
 .navbar-right {
   display: flex;
   align-items: center;
-}
+} 
 
 .navbar h4 {
   margin: 0;
@@ -44,41 +44,45 @@
   width: 40px;
   height: 40px;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 /* Button Styles */
 .uploadbtn {
-  background-color: #3498db;
+  background-color: #698fa8;
   color: white;
   border: none;
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  border-radius: 4px;
+  border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
   margin-left: 10px;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 .uploadbtn:hover {
-  background-color: #2980b9;
+  background-color: #b6c4ce;
+  color: #687a86;
 }
 
 .btn-choose {
   display: inline-block;
-  background-color: #3498db;
+  background-color: #698fa8;
   color: white;
   border: none;
   cursor: pointer;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
   transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   margin-right: 10px;
+  margin-bottom: -1.3px;
 }
 
 .btn-choose:hover {
-  background-color: #f0f0f0;
-  color: black;
+  background-color: #b6c4ce;
+  color: #687a86;
 }
 
 .btn-choose input[type="file"] {
@@ -123,19 +127,30 @@
 }
 
 .image-item {
+  width: 189px;
+  height: 190px;
+  display: flex;
+  margin-top: 10px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ensures the image covers the entire container */
+  object-position: center;
+  cursor: pointer;
   border: 1px solid #ddd;
   width: 189px;
   height: 190px;
   display: flex;
+  margin-top: 10px;
   justify-content: center;
   align-items: center;
-}
-
-.image-item img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-  cursor: pointer;
+  overflow: hidden;
+  border-bottom: white solid 6px;
 }
 
 .full-screen-overlay {
@@ -167,4 +182,9 @@
   border-color: #f5c6cb;
   padding: 10px;
   margin-bottom: 15px;
+  z-index: -1;
 }
+
+
+
+

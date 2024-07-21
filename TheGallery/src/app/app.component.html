@@ -1,6 +1,13 @@
 <div class="container">
-  <div class="my-3">
+  <!-- Login Form -->
+  <div class="login-form">
+    <h4>Login</h4>
+    <input type="email" [(ngModel)]="email" placeholder="Email" />
+    <input type="password" [(ngModel)]="password" placeholder="Password" />
+    <button (click)="login()">Login</button>
+    <button (click)="signUp()">Sign Up</button>
   </div>
 
+  <!-- Image Upload Section -->
   <app-image-upload></app-image-upload>
 </div>

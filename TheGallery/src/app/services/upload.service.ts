@@ -11,6 +11,7 @@ export class FileUploadService {
 
   constructor(private http: HttpClient) {}
 
+  // Upload a file
   upload(file: File): Observable<any> {
     const formData: FormData = new FormData();
     formData.append('image', file, file.name);
@@ -23,10 +24,31 @@ export class FileUploadService {
     );
   }
 
+  // Get list of files
   getFiles(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/getimages`).pipe(
       catchError(error => {
         console.error('Error fetching images:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  // Login
+  login(email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/login`, { email, password }).pipe(
+      catchError(error => {
+        console.error('Error logging in:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  // Sign up
+  signUp(email: string, password: string): Observable<any> {
+    return this.http.post<any>(`${this.baseUrl}/signup`, { email, password }).pipe(
+      catchError(error => {
+        console.error('Error signing up:', error);
         return throwError(error);
       })
     );

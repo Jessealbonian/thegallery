@@ -1,19 +1,19 @@
-/* Center everything */
-@import url(https://fonts.googleapis.com/css?family=Tangerine);
-
-
 .container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh; /* Adjust height as needed */
-    width: 100vw;
-  }
-  
-h4{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-form {
+  width: 300px;
+}
+
+h4 {
   font-family: 'Tangerine', serif;
   font-size: 100px;
   font-weight: bold;
   text-shadow: 5px 5px 5px #a19f9f;
+  margin-bottom: 30px;
 }
-  /* Additional styles as needed */
-  

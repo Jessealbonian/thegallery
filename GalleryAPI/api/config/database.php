@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 //set default timezone to manila
 date_default_timezone_set('Asia/Manila');

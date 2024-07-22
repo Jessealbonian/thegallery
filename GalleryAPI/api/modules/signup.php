@@ -23,7 +23,7 @@ class Signup extends GlobalMethod {
 }
 
 header("Content-Type: application/json");
-require_once "db.php";
+
 
 $data = json_decode(file_get_contents("php://input"));
 

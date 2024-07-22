@@ -1,8 +1,8 @@
 {
-    "/GalleryAPI": {
-      "target": "http://localhost:4200",  
-      "changeOrigin": true,
-      "logLevel": "debug"
-    }
+  "/api": {
+    "target": "http://localhost/GalleryAPI",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
   }
-  
+}

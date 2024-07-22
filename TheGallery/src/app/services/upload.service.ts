@@ -7,7 +7,7 @@ import { catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class FileUploadService {
-  private baseUrl = 'http://localhost/GalleryAPI/api';
+  private baseUrl = 'http://localhost/GalleryAPI/api/modules';
 
   constructor(private http: HttpClient) {}
 

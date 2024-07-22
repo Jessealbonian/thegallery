@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Observable, forkJoin, timer, Subscription } from 'rxjs';
 import { FileUploadService } from '../../services/upload.service';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-image-upload',
@@ -51,6 +53,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       }
     );
   }
+  
 
   onFileSelected(event: any) {
     this.validationError = ''; 

@@ -1,17 +1,19 @@
 <?php
 
-// header("Access-Control-Allow-Origin: *");
-// header("Access-Control-Allow-Methods: POST, OPTIONS");
-// header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
-require_once "global.php";
+// Include the Connection class
+require_once "../config/database.php"; // Adjust the path as necessary
 
-class Get extends GlobalMethod{
+class Get {
     private $pdo;
-    public function __construct(\PDO $pdo){
-        $this->pdo=$pdo;
+
+    public function __construct(\PDO $pdo) {
+        $this->pdo = $pdo;
     }
-    
+
     public function getImage() {
         try {
             // Prepare SQL statement to fetch images
@@ -22,18 +24,27 @@ class Get extends GlobalMethod{
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             // Return the fetched images data
-            return [
+            echo json_encode([
                 "status" => "success",
                 "message" => "Successfully retrieved images.",
                 "data" => $result
-            ];
-        } catch(PDOException $e) {
+            ]);
+        } catch (PDOException $e) {
             // Handle any potential errors
-            return [
+            echo json_encode([
                 "status" => "error",
                 "message" => "Failed to retrieve images: " . $e->getMessage()
-            ];
+            ]);
         }
     }
 }
 
+// Create a PDO instance using the Connection class
+$connection = new Connection();
+$pdo = $connection->connect();
+
+// Create an instance of the Get class and call the getImage method
+$get = new Get($pdo);
+$get->getImage();
+
+?>

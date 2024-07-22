@@ -60,12 +60,17 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "proxyConfig": "proxy.conf.json"
+          },
           "configurations": {
             "production": {
-              "buildTarget": "angular-17-image-upload-preview:build:production"
+              "buildTarget": "angular-17-image-upload-preview:build:production",
+              "proxyConfig": "proxy.conf.json"
             },
             "development": {
-              "buildTarget": "angular-17-image-upload-preview:build:development"
+              "buildTarget": "angular-17-image-upload-preview:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

@@ -1,11 +1,14 @@
 <?php
-require_once "global.php";
 
-class Post extends GlobalMethod {
+ require_once "global.php";
+
+class Post extends GlobalMethod{
     private $pdo;
+    private $get;
+    public function __construct(\PDO $pdo){
+        $this->pdo=$pdo;
 
-    public function __construct(\PDO $pdo) {
-        $this->pdo = $pdo;
+        $this->get = new Get($pdo);
     }
 
     public function addImage($file) {
@@ -33,30 +36,20 @@ class Post extends GlobalMethod {
                         $file["name"],
                         $targetFile
                     ]);
-                    return $this->sendPayload(null, 'success', 'Successfully inserted image', 200);
+                    return $this->sendPayload(null, 'success', 'Successfully inserted image', $code);
                 } catch (\PDOException $e) {
-                    return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
+                    return $e->getMessage();
+                    $code = 400;
                 }
             } else {
                 $errmsg = "Failed to move uploaded file.";
-                return $this->sendPayload(null, 'failed', $errmsg, 500);
+                $code = 500;
             }
         } else {
             $errmsg = "Unsupported file type.";
-            return $this->sendPayload(null, 'failed', $errmsg, 400);
+            $code = 400;
         }
-    }
 
-    public function deleteImage($imgName) {
-        $sql = "DELETE FROM images WHERE imgName = ?";
-        try {
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute([$imgName]);
-            return $this->sendPayload(null, 'success', 'Image deleted successfully', 200);
-        } catch (\PDOException $e) {
-            return $this->sendPayload(null, 'failed', $e->getMessage(), 500);
-        }
+        return $this->sendPayload(null, 'failed', $errmsg, $code);
     }
 }
-
-?>

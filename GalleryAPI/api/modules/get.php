@@ -5,7 +5,7 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 // Include the Connection class
-require_once "../config/database.php"; // Adjust the path as necessary
+require_once 'C:/xampp/htdocs/GalleryAPI/api/config/database.php'; // Adjust the path as necessary
 
 class Get {
     private $pdo;

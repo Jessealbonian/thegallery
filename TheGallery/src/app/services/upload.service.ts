@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ApiResponse } from '../components/login/api-response.model'; // Adjust path as needed
 
 @Injectable({
   providedIn: 'root'
 })
 export class FileUploadService {
-  private baseUrl = 'http://localhost/GalleryAPI/api/modules';
+  private baseUrl = 'http://localhost/GallyAPI/api';
 
   constructor(private http: HttpClient) {}
 
@@ -34,21 +35,11 @@ export class FileUploadService {
     );
   }
 
-  // Login
-  login(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, { email, password }).pipe(
+  // Get users
+  getUsers(): Observable<ApiResponse<any[]>> {
+    return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/getUsers`).pipe(
       catchError(error => {
-        console.error('Error logging in:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  // Sign up
-  signUp(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/signup`, { email, password }).pipe(
-      catchError(error => {
-        console.error('Error signing up:', error);
+        console.error('Error fetching Users:', error);
         return throwError(error);
       })
     );

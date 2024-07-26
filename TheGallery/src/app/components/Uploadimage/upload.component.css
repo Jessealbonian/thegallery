@@ -2,8 +2,8 @@
 
 /* Navigation Bar Styles */
 .navbar {
-  margin-top: -30px;
-  margin-right: -130px;
+  margin-top: -230px;
+  margin-right: -150px;
   width: 1365px;
   display: flex;
   justify-content: space-between;
@@ -123,17 +123,19 @@
   gap: 5px;
   max-width: 1365px;
   margin: 0 auto;
-  margin-left: -120px;
+  margin-left: 10px;
+  margin-right: -140px;
 }
 
 .image-item {
   width: 189px;
   height: 190px;
   display: flex;
-  margin-top: 10px;
+  margin-top: 6px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  
 }
 
 .image-item img {
@@ -146,11 +148,10 @@
   width: 189px;
   height: 190px;
   display: flex;
-  margin-top: 10px;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-bottom: white solid 6px;
+  border-bottom: white solid 1px;
 }
 
 .full-screen-overlay {

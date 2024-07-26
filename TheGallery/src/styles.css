@@ -1,7 +1,7 @@
 /* Global Styles */
 body { 
   height: 100vh;
-  width: 100vw;
+  width: 100%;
   background: linear-gradient(to right, #000000, #8e44ad, #3498db);
   display: flex;
   flex-direction: column;
@@ -17,3 +17,6 @@ body {
   padding: 0 20px;
   border-bottom: 1px solid #ddd;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

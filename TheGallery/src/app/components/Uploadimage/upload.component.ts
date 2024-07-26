@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, timer, Subscription } from 'rxjs';
 import { FileUploadService } from '../../services/upload.service';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+
 
 
 @Component({
@@ -29,6 +30,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadImages();
+
     this.setupKeydownListener();
   }
 
@@ -40,10 +42,12 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     this.uploadService.getFiles().subscribe(
       (response: any) => {
         if (response.status === 'success') {
-          this.imageInfos = response.data.map((image: any) => ({
-            ...image,
-            img: `http://localhost/GalleryAPI/api/${image.img}`
-          }));
+          this.imageInfos = response.data.map((image: any) => {
+            return {
+              ...image,
+              img: `http://localhost/GallyAPI/api/${image.img}` // Adjust path as needed
+            };
+          });
         } else {
           console.error('Failed to retrieve images:', response.message);
         }
@@ -53,7 +57,6 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
 
   onFileSelected(event: any) {
     this.validationError = ''; 
@@ -97,6 +100,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   upload() {
     if (this.selectedFiles.length > 0) {
       const uploadObservables: Observable<any>[] = this.selectedFiles.map(file => this.uploadService.upload(file));
+    
 
       forkJoin(uploadObservables).subscribe(
         (responses: any[]) => {
@@ -142,6 +146,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
 
   navigateFullScreen(direction: 'prev' | 'next') {
     const currentIndex = this.imageInfos.findIndex(img => img.img === this.fullScreenImage.img);
+
     let newIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
     newIndex = (newIndex + this.imageInfos.length) % this.imageInfos.length;
 
@@ -185,6 +190,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       alertElement.classList.remove('show');
     }
   }
+
 
   resetFileInput() {
     setTimeout(() => {

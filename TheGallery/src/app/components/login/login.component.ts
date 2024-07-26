@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ImageUploadComponent } from '../Uploadimage/upload.component'; // Correct path to your upload component
+import { FileUploadService } from '../../services/upload.service'; // Adjust the path as needed
+import { ImageUploadComponent } from '../Uploadimage/upload.component';
+import { ApiResponse } from './api-response.model'; // Adjust path as needed
+
 
 @Component({
   selector: 'app-login',
@@ -14,42 +17,58 @@ import { ImageUploadComponent } from '../Uploadimage/upload.component'; // Corre
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  title = 'Login Gallery';
-  loggedIn = true;
-  showModal = false;
-  loginForm = {
-    username: '',
-    password: ''
-  };
-  signUpForm = {
-    email: '',
-    password: ''
-  };
+  loginFormModel = { username: '', password: '' };
+  signUpFormModel = { email: '', username: '', password: '' };
+  loginPrompt: string = '';
+  showModal: boolean = false;
+  hidePassword: boolean = true;
+  loggedIn: boolean = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private uploadService: FileUploadService) {}
 
   login() {
-    this.http.post('http://localhost/GalleryAPI/api/modules/login.php', this.loginForm).subscribe(
-      (response: any) => {
+    this.uploadService.getUsers().subscribe({
+      next: (response: ApiResponse<any[]>) => {
         console.log('API Response:', response);
-        if (response) {
-          if (response.status === 'success') {
+        const users = response.data; // Extracting the data property from the response
+        if (Array.isArray(users)) {
+          const user = users.find(u => u.email === this.loginFormModel.username && u.password === this.loginFormModel.password);
+          if (user) {
             this.loggedIn = true;
-            console.log('Login successful');
+            this.loginPrompt = '';
           } else {
-            console.error('Login failed:', response);
-            alert('Login failed: ' + (response.message || 'Unknown error'));
+            this.loginPrompt = 'The credentials are wrong';
           }
         } else {
-          console.error('API Response is null');
-          alert('Login failed: No response from server.');
+          this.loginPrompt = 'Unexpected response format';
         }
       },
-      (error: any) => {
-        console.error('Login error:', error);
-        alert('An error occurred during login.');
+      error: (error) => {
+        console.error('Error fetching users:', error);
+        this.loginPrompt = 'An error occurred. Please try again.';
       }
-    );
+    });
+  }
+
+  signUp() {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const body = { action: 'signup', ...this.signUpFormModel };
+    this.http.post<any>('http://localhost/GallyAPI/api/', body, { headers }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.hideSignUpModal();
+        } else {
+          alert('Sign up failed. Please try again.');
+        }
+      },
+      error: () => {
+        alert('An error occurred. Please try again.');
+      }
+    });
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 
   showSignUpModal() {
@@ -58,24 +77,5 @@ export class LoginComponent {
 
   hideSignUpModal() {
     this.showModal = false;
-  }
-
-  signUp() {
-    this.http.post('http://localhost/GalleryAPI/api/modules/signup.php', this.signUpForm).subscribe(
-      (response: any) => {
-        console.log('Sign-Up Response:', response);
-        if (response && response.status === 'success') {
-          alert('Sign up successful. You can now log in.');
-          this.hideSignUpModal();
-        } else {
-          console.error('Sign-Up failed:', response);
-          alert('Sign-Up failed: ' + (response.message || 'Unknown error'));
-        }
-      },
-      (error: any) => {
-        console.error('Sign-Up error:', error);
-        alert('An error occurred during sign-up.');
-      }
-    );
   }
 }

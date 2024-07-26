@@ -1,39 +1,76 @@
 <div class="container">
-    <div class="login-container">
-      <h4>Login</h4>
-      <form (submit)="login()">
+  <div class="login-container">
+    <h4>Login</h4>
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="username">Email:</label>
+        <input id="username"
+               class="form-control"
+               name="username"
+               type="email"
+               [(ngModel)]="loginFormModel.username"
+               required
+               autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input id="password"
+               class="form-control"
+               name="password"
+               [type]="hidePassword ? 'password' : 'text'"
+               [(ngModel)]="loginFormModel.password"
+               required
+               placeholder="Enter Password"
+               autocomplete="current-password">
+        <i class="fa"
+           [ngClass]="hidePassword ? 'fa-eye-slash' : 'fa-eye'"
+           id="pass-icon"
+           (click)="togglePasswordVisibility()"
+           aria-hidden="true"></i>
+      </div>
+
+      <div class="error-message" *ngIf="loginPrompt">{{ loginPrompt }}</div>
+
+      <button type="submit" class="btn-login">Login</button>
+      <button type="button" (click)="showSignUpModal()" class="btn-signup">Sign Up</button>
+    </form>
+  </div>
+
+  <!-- Sign-Up Modal -->
+  <div *ngIf="showModal" class="modal-overlay" (click)="hideSignUpModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h4>Sign Up</h4>
+      <form (ngSubmit)="signUp()" #signUpForm="ngForm">
         <div class="form-group">
-          <label for="username">Email:</label>
-          <input id="username" name="username" type="email" [(ngModel)]="loginForm.username" required>
+          <label for="signup-email">Email:</label>
+          <input id="signup-email"
+                 name="signupEmail"
+                 type="email"
+                 [(ngModel)]="signUpFormModel.email"
+                 required>
         </div>
         <div class="form-group">
-          <label for="password">Password:</label>
-          <input id="password" name="password" type="password" [(ngModel)]="loginForm.password" required>
+          <label for="signup-username">Username:</label>
+          <input id="signup-username"
+                 name="signupUsername"
+                 type="text"
+                 [(ngModel)]="signUpFormModel.username"
+                 required>
         </div>
-        <button type="submit" class="btn-login">Login</button>
-        <button type="button" (click)="showSignUpModal()" class="btn-signup">Sign Up</button>
+        <div class="form-group">
+          <label for="signup-password">Password:</label>
+          <input id="signup-password"
+                 name="signupPassword"
+                 type="password"
+                 [(ngModel)]="signUpFormModel.password"
+                 required>
+        </div>
+        <button type="submit" class="btn-signup">Sign Up</button>
+        <button type="button" (click)="hideSignUpModal()" class="btn-close">Close</button>
       </form>
     </div>
-  
-    <!-- Sign-Up Modal -->
-    <div *ngIf="showModal" class="modal-overlay" (click)="hideSignUpModal()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <h4>Sign Up</h4>
-        <form (submit)="signUp()">
-          <div class="form-group">
-            <label for="signup-email">Email:</label>
-            <input id="signup-email" name="signupEmail" type="email" [(ngModel)]="signUpForm.email" required>
-          </div>
-          <div class="form-group">
-            <label for="signup-password">Password:</label>
-            <input id="signup-password" name="signupPassword" type="password" [(ngModel)]="signUpForm.password" required>
-          </div>
-          <button type="submit" class="btn-signup">Sign Up</button>
-          <button type="button" (click)="hideSignUpModal()" class="btn-close">Close</button>
-        </form>
-      </div>
-    </div>
-  
-    <app-image-upload *ngIf="loggedIn"></app-image-upload>
   </div>
-  
+
+  <app-image-upload *ngIf="loggedIn"></app-image-upload>
+</div>

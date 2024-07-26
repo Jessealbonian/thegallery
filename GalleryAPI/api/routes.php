@@ -50,10 +50,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
         // Handle GET requests
             case 'GET':
                 switch($request[0]){
-                    case 'getimages':
-                        // Return JSON-encoded data for getting employees
-                            echo json_encode($get->getImage());
-                        break;
+                    case 'getimages': {
+                                                // Return JSON-encoded data for getting employees
+                    echo json_encode($get->getImage());
+                                                break;  
+                    }
+                    break;  
+
 
                         default:
                         // Return a 403 response for unsupported requests

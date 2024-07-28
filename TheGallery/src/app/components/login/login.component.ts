@@ -1,18 +1,17 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { FileUploadService } from '../../services/upload.service'; // Adjust the path as needed
-import { ImageUploadComponent } from '../Uploadimage/upload.component';
 import { ApiResponse } from './api-response.model'; // Adjust path as needed
 
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterOutlet, ImageUploadComponent],
+  imports: [CommonModule, FormsModule, RouterOutlet],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -21,10 +20,11 @@ export class LoginComponent {
   signUpFormModel = { email: '', username: '', password: '' };
   loginPrompt: string = '';
   showModal: boolean = false;
+  signUpPrompt: string = '';
   hidePassword: boolean = true;
   loggedIn: boolean = false;
 
-  constructor(private uploadService: FileUploadService) {}
+  constructor(private uploadService: FileUploadService, private router: Router) {}
 
   login() {
     this.uploadService.getUsers().subscribe({
@@ -36,6 +36,8 @@ export class LoginComponent {
           if (user) {
             this.loggedIn = true;
             this.loginPrompt = '';
+            this.router.navigate(['/upload']);
+
           } else {
             this.loginPrompt = 'The credentials are wrong';
           }
@@ -50,22 +52,26 @@ export class LoginComponent {
     });
   }
 
+  //signUp here
   signUp() {
-    const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    const body = { action: 'signup', ...this.signUpFormModel };
-    this.http.post<any>('http://localhost/GallyAPI/api/', body, { headers }).subscribe({
+    const { email, username, password } = this.signUpFormModel;
+    this.uploadService.signUp({ email, username, password }).subscribe({
       next: (response) => {
-        if (response.success) {
-          this.hideSignUpModal();
+        console.log('Sign Up Response:', response); // Log the response to verify
+        if (response.remarks === 'success') {
+          this.SignUpModal();
+          alert('Sign up successful! You can now log in.');
         } else {
-          alert('Sign up failed. Please try again.');
+          this.signUpPrompt = 'Sign up failed. ' + response.message;
         }
       },
-      error: () => {
-        alert('An error occurred. Please try again.');
+      error: (error) => {
+        console.error('Error signing up:', error);
+        this.signUpPrompt = 'An error occurred during sign up: ' + error.message;
       }
     });
   }
+  
 
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;
@@ -75,7 +81,7 @@ export class LoginComponent {
     this.showModal = true;
   }
 
-  hideSignUpModal() {
+  SignUpModal() {
     this.showModal = false;
   }
 }

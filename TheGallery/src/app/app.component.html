@@ -1,8 +1,6 @@
 <div class="container">
 
   <!-- Show Login Component if not logged in -->
-  <app-login *ngIf="!loggedIn"></app-login>
-
-  <!-- Show Upload Component if logged in -->
-  <app-image-upload *ngIf="loggedIn"></app-image-upload>
+  <app-login></app-login>
+  <router-outlet></router-outlet>
 </div>

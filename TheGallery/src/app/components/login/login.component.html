@@ -38,7 +38,7 @@
   </div>
 
   <!-- Sign-Up Modal -->
-  <div *ngIf="showModal" class="modal-overlay" (click)="hideSignUpModal()">
+  <div *ngIf="showModal" class="modal-overlay" (click)="SignUpModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <h4>Sign Up</h4>
       <form (ngSubmit)="signUp()" #signUpForm="ngForm">
@@ -67,10 +67,10 @@
                  required>
         </div>
         <button type="submit" class="btn-signup">Sign Up</button>
-        <button type="button" (click)="hideSignUpModal()" class="btn-close">Close</button>
+        <button type="button" (click)="SignUpModal()" class="btn-close">Close</button>
       </form>
     </div>
   </div>
 
-  <app-image-upload *ngIf="loggedIn"></app-image-upload>
+  <!-- <app-image-upload *ngIf="loggedIn"></app-image-upload> -->
 </div>

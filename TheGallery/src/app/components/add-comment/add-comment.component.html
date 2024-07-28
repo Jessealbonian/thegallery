@@ -1,0 +1,15 @@
+<!-- add-comment.component.html -->
+<div class="comment-container" style="width: 900px; background-color: white; padding: 20px;">
+  <div style="display: flex; flex-direction: row;">
+    <div style="flex: 1;">
+      <img [src]="image?.img" [alt]="image?.imgName" style="max-width: 100%;" />
+    </div>
+    <div style="flex: 2; margin-left: 20px;">
+      <h2>Add Comment</h2>
+      <textarea [(ngModel)]="commentText" rows="10" cols="50"></textarea>
+      <div style="margin-top: 10px;">
+        <button (click)="submitComment()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

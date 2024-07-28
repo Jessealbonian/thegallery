@@ -16,19 +16,23 @@
   </div>
 </nav>
 
+<!-- upload.component.html -->
+<div *ngIf="fullScreenImage" class="full-screen-overlay" (click)="closeFullScreen()">
+  <div class="full-screen-container" (click)="$event.stopPropagation()">
+    <img [src]="fullScreenImage.img" [alt]="fullScreenImage.imgName" />
+    <button class="add-comment-btn" (click)="navigateToAddComment(fullScreenImage, $event)">Add Comment</button>
+  </div>
+</div>
+
+
+
 <!-- Validation Error Message -->
 <div *ngIf="validationError" class="alert alert-danger" role="alert">
   {{ validationError }}
   <button class="close-btn" (click)="hideValidationPopup()">×</button>
 </div>
 
-<!-- Preview Thumbnails -->
-<div *ngIf="previewThumbnails.length > 0">
-  <div *ngFor="let preview of previewThumbnails; let i = index" class="thumbnail-container">
-    <img [src]="preview" class="preview" />
-    <button (click)="removeSelectedFile(i)" class="btn-remove">Remove</button>
-  </div>
-</div>
+
 
 <!-- Upload Message -->
 <div *ngIf="message" class="alert alert-secondary" role="alert">
@@ -44,12 +48,15 @@
   </div>
 </div>
 
-<!-- Full Screen Image Overlay -->
-<div *ngIf="fullScreenImage" class="full-screen-overlay" (click)="closeFullScreen()">
-  <div class="full-screen-container">
-    <img [src]="fullScreenImage.img" [alt]="fullScreenImage.imgName" />
+
+<!-- Preview Thumbnails -->
+<div *ngIf="previewThumbnails.length > 0">
+  <div *ngFor="let preview of previewThumbnails; let i = index" class="thumbnail-container">
+    <img [src]="preview" class="preview" (click)="showFullScreen(preview)" />
+    <button (click)="removeSelectedFile(i)" class="btn-remove">Remove</button>
   </div>
 </div>
+
 
 <!-- No Images Message -->
 <div *ngIf="imageInfos.length === 0" class="no-image-msg">

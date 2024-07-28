@@ -4,8 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin, timer, Subscription } from 'rxjs';
 import { FileUploadService } from '../../services/upload.service';
 import { FormsModule } from '@angular/forms';
-
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-image-upload',
@@ -18,19 +17,17 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   selectedFiles: File[] = [];
   previewThumbnails: string[] = [];
   @ViewChild('fileInput') fileInput!: ElementRef;
-
+  
   message: string = '';
   imageInfos: any[] = [];
   fullScreenImage: any;
   private keydownSubscription: Subscription | undefined;
-
   validationError: string = '';
 
-  constructor(private uploadService: FileUploadService) {}
+  constructor(private uploadService: FileUploadService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadImages();
-
     this.setupKeydownListener();
   }
 
@@ -101,7 +98,6 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     if (this.selectedFiles.length > 0) {
       const uploadObservables: Observable<any>[] = this.selectedFiles.map(file => this.uploadService.upload(file));
     
-
       forkJoin(uploadObservables).subscribe(
         (responses: any[]) => {
           console.log('All files uploaded successfully:', responses);
@@ -130,8 +126,10 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
 
   showFullScreen(image: any) {
     this.fullScreenImage = image;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
   }
+  
+
 
   closeFullScreen() {
     this.fullScreenImage = null;
@@ -158,16 +156,18 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       const handler = (event: KeyboardEvent) => observer.next(event);
       window.addEventListener('keydown', handler);
       return () => window.removeEventListener('keydown', handler);
-    }).subscribe(event => this.onKeydown(event));
+    }).subscribe(event => this.handleKeydown(event));
   }
 
-  private onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && this.fullScreenImage) {
-      this.closeFullScreen();
-    } else if (event.key === 'ArrowRight' && this.fullScreenImage) {
-      this.navigateFullScreen('next');
-    } else if (event.key === 'ArrowLeft' && this.fullScreenImage) {
-      this.navigateFullScreen('prev');
+  private handleKeydown(event: KeyboardEvent) {
+    if (this.fullScreenImage) {
+      if (event.key === 'ArrowLeft') {
+        this.navigateFullScreen('prev');
+      } else if (event.key === 'ArrowRight') {
+        this.navigateFullScreen('next');
+      } else if (event.key === 'Escape') {
+        this.closeFullScreen();
+      }
     }
   }
 
@@ -183,6 +183,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       console.error('Validation alert element not found');
     }
   }
+  
   hideValidationPopup() {
     const alertElement = document.querySelector('.alert.alert-danger') as HTMLElement;
     
@@ -192,18 +193,16 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   }
 
 
-  resetFileInput() {
-    setTimeout(() => {
-      this.fileInput.nativeElement.value = '';
-      this.selectedFiles = [];
-      this.previewThumbnails = [];
-      this.validationError = '';
-    }, 2000);
+  private resetFileInput() {
+    this.fileInput.nativeElement.value = '';
   }
 
-  updateFileInput() {
-    const dataTransfer = new DataTransfer();
-    this.selectedFiles.forEach(file => dataTransfer.items.add(file));
-    this.fileInput.nativeElement.files = dataTransfer.files;
+  private updateFileInput() {
+    this.fileInput.nativeElement.files = new FileList();
+  }
+
+  navigateToAddComment(image: any, event: MouseEvent) {
+    event.stopPropagation(); // Prevent closing the fullscreen view
+    this.router.navigate(['/add-comment'], { state: { image } });
   }
 }

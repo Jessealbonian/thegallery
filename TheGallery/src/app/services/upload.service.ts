@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { ApiResponse } from '../components/login/api-response.model'; // Adjust path as needed
@@ -43,5 +43,30 @@ export class FileUploadService {
         return throwError(error);
       })
     );
+  }
+
+  //signup
+  signUp(signUpData: { email: string, username: string, password: string }): Observable<any> {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post<any>(`${this.baseUrl}/signup`, signUpData, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error signing up:', error);
+          return throwError(error);
+        })
+      );
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    let errorMessage = 'Unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Client-side error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Server-side error: ${error.status} - ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
   }
 }

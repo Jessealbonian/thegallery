@@ -11,20 +11,19 @@
     <h4>The Gallery</h4>
   </div>
   <div class="navbar-right">
+    <span class="username">{{ username }}</span> <!-- Display username -->
     <img src="path_to_your_image.jpg" alt="Profile image" class="Profile-image" />
     <img src="path_to_your_image.jpg" alt="Logout Button" class="Logout-image" />
   </div>
 </nav>
 
-<!-- upload.component.html -->
+<!-- Full Screen Image View -->
 <div *ngIf="fullScreenImage" class="full-screen-overlay" (click)="closeFullScreen()">
   <div class="full-screen-container" (click)="$event.stopPropagation()">
     <img [src]="fullScreenImage.img" [alt]="fullScreenImage.imgName" />
-    <button class="add-comment-btn" (click)="navigateToAddComment(fullScreenImage, $event)">Add Comment</button>
+    <button class="add-comment-btn" (click)="navigateToAddComment(fullScreenImage, fullScreenImage.id, $event)">Add Comment</button>
   </div>
 </div>
-
-
 
 <!-- Validation Error Message -->
 <div *ngIf="validationError" class="alert alert-danger" role="alert">
@@ -32,22 +31,17 @@
   <button class="close-btn" (click)="hideValidationPopup()">×</button>
 </div>
 
-
-
 <!-- Upload Message -->
 <div *ngIf="message" class="alert alert-secondary" role="alert">
   {{ message }}
 </div>
 
 <!-- Image Grid -->
-<div class="image-grid" *ngIf="imageInfos.length > 0">
-  <div class="image-item" *ngFor="let image of imageInfos; trackBy: trackByFn">
-    <a (click)="showFullScreen(image)">
-      <img [src]="image.img" [alt]="image.imgName" />
-    </a>
+<div class="image-grid">
+  <div *ngFor="let image of imageInfos; trackBy: trackByFn" class="image-item">
+    <img [src]="image.img" [alt]="image.imgName" (click)="showFullScreen(image)" />
   </div>
 </div>
-
 
 <!-- Preview Thumbnails -->
 <div *ngIf="previewThumbnails.length > 0">
@@ -56,7 +50,6 @@
     <button (click)="removeSelectedFile(i)" class="btn-remove">Remove</button>
   </div>
 </div>
-
 
 <!-- No Images Message -->
 <div *ngIf="imageInfos.length === 0" class="no-image-msg">

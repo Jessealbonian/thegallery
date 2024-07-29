@@ -5,6 +5,7 @@ import { Observable, forkJoin, timer, Subscription } from 'rxjs';
 import { FileUploadService } from '../../services/upload.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { SharedService } from '../../services/shared.service'; // Adjust path as needed
 
 @Component({
   selector: 'app-image-upload',
@@ -23,10 +24,12 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
   fullScreenImage: any;
   private keydownSubscription: Subscription | undefined;
   validationError: string = '';
+  username: string | null = null; // Store username
 
-  constructor(private uploadService: FileUploadService, private router: Router) {}
+  constructor(private uploadService: FileUploadService, private router: Router, private sharedService: SharedService) {}
 
   ngOnInit(): void {
+    this.username = this.sharedService.getUsername(); // Retrieve username
     this.loadImages();
     this.setupKeydownListener();
   }
@@ -42,7 +45,8 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
           this.imageInfos = response.data.map((image: any) => {
             return {
               ...image,
-              img: `http://localhost/GallyAPI/api/${image.img}` // Adjust path as needed
+              img: `http://localhost/GallyAPI/api/${image.img}`, // Adjust path as needed
+              id: image.id // Ensure the image ID is included
             };
           });
         } else {
@@ -128,8 +132,6 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     this.fullScreenImage = image;
     document.body.style.overflow = 'hidden'; // Prevent scrolling
   }
-  
-
 
   closeFullScreen() {
     this.fullScreenImage = null;
@@ -183,7 +185,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       console.error('Validation alert element not found');
     }
   }
-  
+
   hideValidationPopup() {
     const alertElement = document.querySelector('.alert.alert-danger') as HTMLElement;
     
@@ -191,7 +193,6 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
       alertElement.classList.remove('show');
     }
   }
-
 
   private resetFileInput() {
     this.fileInput.nativeElement.value = '';
@@ -201,8 +202,8 @@ export class ImageUploadComponent implements OnInit, OnDestroy {
     this.fileInput.nativeElement.files = new FileList();
   }
 
-  navigateToAddComment(image: any, event: MouseEvent) {
+  navigateToAddComment(image: any, imageId: string, event: MouseEvent) {
     event.stopPropagation(); // Prevent closing the fullscreen view
-    this.router.navigate(['/add-comment'], { state: { image } });
+    this.router.navigate(['/add-comment'], { state: { image, imageId } });
   }
 }

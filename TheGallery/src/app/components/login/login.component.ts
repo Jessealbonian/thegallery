@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { RouterOutlet } from '@angular/router';
 import { FileUploadService } from '../../services/upload.service'; // Adjust the path as needed
 import { ApiResponse } from './api-response.model'; // Adjust path as needed
-
+import { SharedService } from '../../services/shared.service'; // Adjust path as needed
 
 @Component({
   selector: 'app-login',
@@ -24,7 +23,11 @@ export class LoginComponent {
   hidePassword: boolean = true;
   loggedIn: boolean = false;
 
-  constructor(private uploadService: FileUploadService, private router: Router) {}
+  constructor(
+    private uploadService: FileUploadService,
+    private router: Router,
+    private sharedService: SharedService
+  ) {}
 
   login() {
     this.uploadService.getUsers().subscribe({
@@ -34,10 +37,10 @@ export class LoginComponent {
         if (Array.isArray(users)) {
           const user = users.find(u => u.email === this.loginFormModel.username && u.password === this.loginFormModel.password);
           if (user) {
+            this.sharedService.setUsername(user.username); // Store the username
             this.loggedIn = true;
             this.loginPrompt = '';
             this.router.navigate(['/upload']);
-
           } else {
             this.loginPrompt = 'The credentials are wrong';
           }
@@ -52,7 +55,7 @@ export class LoginComponent {
     });
   }
 
-  //signUp here
+  // Sign up logic here
   signUp() {
     const { email, username, password } = this.signUpFormModel;
     this.uploadService.signUp({ email, username, password }).subscribe({
@@ -71,7 +74,6 @@ export class LoginComponent {
       }
     });
   }
-  
 
   togglePasswordVisibility() {
     this.hidePassword = !this.hidePassword;

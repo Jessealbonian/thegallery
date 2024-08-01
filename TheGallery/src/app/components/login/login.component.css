@@ -14,11 +14,12 @@
   border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background: white;
 }
 
 h4 {
   font-family: 'Tangerine', serif;
-  font-size: 32px;
+  font-size: 50px;
   font-weight: bold;
   text-shadow: 2px 2px 2px #a19f9f;
 }
@@ -50,20 +51,20 @@ button {
 }
 
 .btn-login {
-  background-color: #4CAF50;
+  background-color: #79927a;
 }
 
 .btn-login:hover {
-  background-color: #45a049;
+  background-color: #415342;
 }
 
 .btn-signup {
-  background-color: #007bff;
+  background-color: #73869b;
   margin-left: 10px;
 }
 
 .btn-signup:hover {
-  background-color: #0056b3;
+  background-color: #505963;
 }
 
 .modal-overlay {

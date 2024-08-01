@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http'; // Import HttpClient
-import { SharedService } from '../../services/shared.service'; // Adjust path as needed
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { SharedService } from '../../services/shared.service';
 
 interface ApiResponse {
-  status: string;
-  message: string;
-  data: any[];
+  status: any; // Adjusted to handle any status field structure
+  message?: string; // Optional message field
+  payload?: any[]; // Optional payload field
+  timestamp?: any; // Optional timestamp field
+  data?: any[]; // Fallback field for data
 }
 
 @Component({
@@ -21,42 +23,57 @@ interface ApiResponse {
 export class AddCommentComponent implements OnInit {
   image: any = null;
   commentText: string = '';
-  username: string | null = null; // Store username
-  comments: any[] = []; // Store comments
+  username: string | null = null;
+  comments: any[] = [];
   validationError: string | null = null;
 
-  constructor(private router: Router, private sharedService: SharedService, private http: HttpClient) { // Inject HttpClient
+  constructor(private router: Router, private sharedService: SharedService, private http: HttpClient) {
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras?.state) {
       this.image = navigation.extras.state['image'];
+      console.log('Image received:', this.image);
     }
   }
 
   ngOnInit() {
-    this.username = this.sharedService.getUsername(); // Get the username from the shared service
-    this.fetchComments(); // Fetch comments when the component initializes
+    this.username = this.sharedService.getUsername();
+    console.log('Username:', this.username);
+    this.fetchComments();
   }
 
   fetchComments() {
     if (this.image && this.image.id) {
+      console.log('Fetching comments for image ID:', this.image.id);
       this.http.get<ApiResponse>(`http://localhost/GallyAPI/api/getCommentsByImageId/${this.image.id}`).subscribe(
         (response) => {
-          if (response.status === 'success') {
-            this.comments = response.data;
-          } else {
+          console.log('Fetch comments raw response:', response);
+
+          // Check for different possible structures
+          if (response.status && response.status === 'success') {
+            this.comments = response.payload || response.data || []; // Use payload or data
+            console.log('Comments fetched:', this.comments);
+          } else if (response.message) {
             this.validationError = response.message;
+            console.error('Error fetching comments:', this.validationError);
+          } else {
+            this.validationError = 'Unexpected response format.';
+            console.error('Error fetching comments:', this.validationError);
           }
         },
-        (error) => {
-          this.validationError = 'Failed to fetch comments. Please try again later.';
+        (error: HttpErrorResponse) => {
+          this.validationError = `Failed to fetch comments. Please try again later.`;
+          console.error('Fetch comments error:', error);
         }
       );
+    } else {
+      console.error('Image ID is missing');
     }
   }
 
   submitComment() {
     if (!this.commentText.trim()) {
       this.validationError = 'Comment cannot be empty.';
+      console.error('Validation error:', this.validationError);
       return;
     }
 
@@ -66,24 +83,38 @@ export class AddCommentComponent implements OnInit {
       username: this.username
     };
 
+    console.log('Submitting comment:', commentData);
+
     this.http.post<ApiResponse>('http://localhost/GallyAPI/api/addcomment', commentData).subscribe(
       (response) => {
-        if (response.status === 'success') {
-          this.comments.push({ username: this.username, comment: this.commentText });
+        console.log('Submit comment raw response:', response);
+
+        if (response.status && response.status === 'success') {
+          console.log('Comment submitted successfully:', response);
           this.commentText = '';
           this.validationError = null;
-        } else {
+          this.fetchComments(); // Fetch comments again to update the list
+        } else if (response.message) {
           this.validationError = response.message;
+          console.error('Submit comment error:', this.validationError);
+        } else {
+          this.validationError = 'Unexpected response format.';
+          console.error('Submit comment error:', this.validationError);
         }
       },
-      (error) => {
-        this.validationError = 'Failed to submit comment. Please try again later.';
+      (error: HttpErrorResponse) => {
+        if (error.error instanceof ErrorEvent) {
+          this.validationError = `Client-side error: ${error.error.message}`;
+        } else {
+          this.validationError = `Server-side error: ${error.status} - ${error.message}`;
+        }
+        console.error('Submit comment error:', error);
       }
     );
   }
 
   PathBack(image: any, event: MouseEvent) {
-    event.stopPropagation(); // Prevent closing the fullscreen view
+    event.stopPropagation();
     this.router.navigate(['/upload'], { state: { image } });
   }
 }

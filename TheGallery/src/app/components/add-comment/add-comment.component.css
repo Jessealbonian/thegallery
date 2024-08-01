@@ -14,8 +14,7 @@
   align-items: center; /* Centers vertically */
 }
 
-.comment{
-}
+
 
 .comment-container {
   width: 100%;
@@ -46,7 +45,7 @@
 }
 
 .comment-section {
-  flex: 1; /* Take less space compared to image section */
+  flex: 3; /* Take less space compared to image section */
   padding: 20px;
   display: flex;
   flex-direction: column;

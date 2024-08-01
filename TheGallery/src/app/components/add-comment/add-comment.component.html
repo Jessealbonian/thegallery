@@ -1,8 +1,8 @@
 <div class="image-preview-modal">
   <div class="comment-container" style="width: 900px; background-color: white; padding: 20px; position: relative;">
     <div style="display: flex; flex-direction: row;">
-      <div style="flex: 1;">
-        <img [src]="image?.img" [alt]="image?.imgName" style="max-width: 100%;" />
+      <div style="flex: 1;" class="image-section">
+        <img [src]="image?.img" [alt]="image?.imgName" class="image-preview" />
       </div>
       <div class="comment" style="flex: 2; margin-left: 20px; display: flex; flex-direction: column; justify-content: space-between;">
         <div>
@@ -18,7 +18,7 @@
             <h3>Comments</h3>
             <ul>
               <li *ngFor="let comment of comments">
-                <strong>{{ comment.username }}:</strong> {{ comment.comment }}
+                <strong>{{ comment.username }}:</strong> {{ comment.comment_text }}
               </li>
             </ul>
           </div>
